@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "SVG Viewer: Change converter",
+        "command": "svg_viewer_change_converter"
+    },
+    {
+        "caption": "SVG Viewer: View SVG",
+        "command": "svg_viewer_view_svg"
+    }
+]
