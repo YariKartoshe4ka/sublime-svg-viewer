@@ -6,7 +6,6 @@
         [
             {
                 "caption": "Package Settings",
-                "mnemonic": "P",
                 "id": "package-settings",
                 "children":
                 [
@@ -34,6 +33,12 @@
                                 "command": "open_file",
                                 "args": {"file": "${packages}/User/Default.sublime-keymap"},
                                 "caption": "Key Bindings – User"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file",
+                                "args": {"file": "${packages}/svg-viewer/converters.json"},
+                                "caption": "Converters – Edit"
                             }
                         ]
                     }

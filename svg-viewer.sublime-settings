@@ -1,9 +1,9 @@
 {
-    /*
-        If true, generated image will be opened in preview mode
-        Else it will be opened in new tab
-    */
+    // If true, generated image will be opened in preview mode
+    // Else it will be opened in new tab
     "open_picture_in_preview_mode": true,
 
+    // Dots per inch of generated PNG file
+    // Maybe not compatible with some converters
     "dpi": 96
 }

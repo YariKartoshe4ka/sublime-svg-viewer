@@ -1,6 +1,6 @@
 [
     {
-        "caption": "SVG Viewer: Change converter",
+        "caption": "SVG Viewer: Change Converter",
         "command": "svg_viewer_change_converter"
     },
     {
