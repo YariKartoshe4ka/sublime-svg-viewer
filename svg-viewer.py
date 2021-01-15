@@ -41,7 +41,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
             if not which(converter):
                 sublime.error_message('"{}" converter not installed or not in PATH'.format(converter))
             elif converter not in self.converters.keys():
-                sublime.error_message('"{}" converter not supported. Please choose converter only from list!'.format(converter))
+                sublime.error_message('"{}" converter not supported. Please choose converter only from suggested list!'.format(converter))
             else:
                 self.convert(get_index_by_converter(converter))
         else:

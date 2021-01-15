@@ -1,1 +1,6 @@
-[{ "command": "svg_viewer_view_svg", "caption": "SVG Viewer" }]
+[
+    {
+        "caption": "SVG Viewer",
+        "command": "svg_viewer_view_svg"
+    }
+]
