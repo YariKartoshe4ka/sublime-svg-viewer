@@ -2,10 +2,9 @@ import os
 import sublime
 import sublime_plugin
 from tempfile import gettempdir
-from hashlib import sha256
+from hashlib import md5
 from shutil import which
 from json import load
-
 
 
 # Sublime plugin events functions
@@ -57,23 +56,24 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
         if not os.path.exists(self.TMP_DIR):
             os.mkdir(self.TMP_DIR)
 
-        name = self.view.file_name()
-        
-        dpi = self.settings.get('dpi', 300)
+        name = self.view.window().active_view().file_name()
 
-        out = sha256(open(name).read().encode('utf-8')).hexdigest() + '.png'
+        dpi = self.settings.get('dpi', 300)
+        open_picture_in_preview_mode = self.settings.get('open_picture_in_preview_mode', False)
+        always_view_svg_as_picture = self.settings.get('always_view_svg_as_picture', False)
+
+        out = md5(open(name).read().encode('utf-8')).hexdigest() + '.png'
         out = os.path.join(self.TMP_DIR, out)
 
-        if os.path.exists(out):
-            self.view.window().open_file(out, flags=sublime.TRANSIENT if self.settings.get('open_picture_in_preview_mode') else 0)
-        else:
+        if not os.path.exists(out):
             cmd = self.converters[get_converter_by_index(index)].format(name=name, out=out, dpi=dpi)
+            print(cmd)
             os.popen(cmd)
 
-        self.view.window().open_file(out, flags=sublime.TRANSIENT if self.settings.get('open_picture_in_preview_mode') else 0)
+        view = self.view.window().open_file(out, flags=sublime.TRANSIENT if open_picture_in_preview_mode and not always_view_svg_as_picture else 0)
 
 
-class SvgViewerChangeConverter(sublime_plugin.TextCommand):
+class SvgViewerChangeConverterCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.view.window().show_quick_panel(get_converters(), self.change)
 
@@ -81,3 +81,11 @@ class SvgViewerChangeConverter(sublime_plugin.TextCommand):
         SvgViewerViewSvgCommand.settings.set('converter', get_converter_by_index(index))
 
 
+
+# Events
+class SvgViewerAlwaysViewSvgAsPictureEventListener(sublime_plugin.ViewEventListener):
+    def on_load(self):
+        if SvgViewerViewSvgCommand.settings.get('always_view_svg_as_picture', False):
+            if self.view.file_name().endswith('.svg'):
+                self.view.window().run_command('svg_viewer_view_svg')
+                self.view.close()

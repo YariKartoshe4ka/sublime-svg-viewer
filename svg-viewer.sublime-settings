@@ -1,7 +1,12 @@
 {
     // If true, generated image will be opened in preview mode
     // Else it will be opened in new tab
+    // Ignored if always_view_svg_as_picture is true
     "open_picture_in_preview_mode": true,
+
+    // If true, when you open SVG, it
+    // won't be XML text, but picture
+    "always_view_svg_as_picture": false,
 
     // Dots per inch of generated PNG file
     // Maybe not compatible with some converters
