@@ -23,7 +23,7 @@ After installing plugin, you need install SVG to PNG converter<br>
 By default we support these converters:
 
 - [CairoSVG](https://github.com/Kozea/CairoSVG)
-- [Inkspace](https://inkscape.org/)
+- [Inkscape](https://inkscape.org/)
 
 But you can [add](#contribution) another converter
 
@@ -36,6 +36,11 @@ But you can [add](#contribution) another converter
 3. (if fisrt run) Choose SVG converter from the suggested converters
 4. Profit!
 
+
+### Settings
+
+If you want edit settings, key bindings or converters, do:<br>
+Preferences &#8594; Package Settings &#8594; Settings / Key Bindings / Converters - Edit
 
 
 ### Contribution
@@ -50,5 +55,5 @@ If you use another SVG to PNG converter, do:
 }
 ```
 3. Add this string to the end of [converters.json](converters.json) file
-4. Add link to your converter to description of push-request
+4. Add a link to your converter in the push-request description
 5. Send push-request

@@ -1,4 +1,4 @@
 {
     "cairosvg": "cairosvg \"{name}\" -o \"{out}\" -d {dpi}",
-    "inkspace": "inkspace --export-type=png \"{name}\" -o \"{out}\" -d {dpi}"
+    "inkscape": "inkscape --export-type=png \"{name}\" -o \"{out}\" -d {dpi}"
 }
