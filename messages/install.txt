@@ -1,0 +1,20 @@
+
+     ______     ______  __     ___                        
+    / ___\ \   / / ___| \ \   / (_) _____      _____ _ __ 
+    \___ \\ \ / / |  _   \ \ / /| |/ _ \ \ /\ / / _ \ '__|
+     ___) |\ V /| |_| |   \ V / | |  __/\ V  V /  __/ |   
+    |____/  \_/  \____|    \_/  |_|\___| \_/\_/ \___|_|   
+
+   Sublime Text 3 plugin, for viewing SVG files as pictures
+
+
+Thanks for installing SVG Viewer. Now you should install SVG to PNG converter.
+By default we support these converters:
+
+        CairoSVG (https://github.com/Kozea/CairoSVG)
+        Inkscape (https://inkscape.org)
+
+But you can add another converter, by adding command to converters.json file
+(Preferences -> SVG Viewer -> Converters – Edit)
+
+Check https://github.com/YariKartoshe4ka/sublime-svg-viewer for more details

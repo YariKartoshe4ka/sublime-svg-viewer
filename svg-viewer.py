@@ -4,7 +4,7 @@ import sublime_plugin
 from tempfile import gettempdir
 from hashlib import md5
 from shutil import which
-from json import load
+from json import loads
 
 
 # Sublime plugin events functions
@@ -31,7 +31,12 @@ def get_converters():
 class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
     BASE_DIR = os.path.dirname(__file__)
     TMP_DIR = os.path.join(gettempdir(), 'svg-viewer')
-    converters = load(open(os.path.join(BASE_DIR, 'converters.json')))
+    converters = loads(sublime.load_resource('Packages/SVG Viewer/converters.json'))
+
+    try:
+        converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
+    except:
+        pass
 
     def run(self, edit):
         converter = self.settings.get('converter', None)
@@ -58,7 +63,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
 
         name = self.view.window().active_view().file_name()
 
-        dpi = self.settings.get('dpi', 300)
+        dpi = self.settings.get('dpi', 96)
         open_picture_in_preview_mode = self.settings.get('open_picture_in_preview_mode', False)
         always_view_svg_as_picture = self.settings.get('always_view_svg_as_picture', False)
 
@@ -70,7 +75,8 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
             print(cmd)
             os.popen(cmd)
 
-        view = self.view.window().open_file(out, flags=sublime.TRANSIENT if open_picture_in_preview_mode and not always_view_svg_as_picture else 0)
+        flags = sublime.TRANSIENT if open_picture_in_preview_mode and not always_view_svg_as_picture else 0
+        view = self.view.window().open_file(out, flags=flags)
 
 
 class SvgViewerChangeConverterCommand(sublime_plugin.TextCommand):

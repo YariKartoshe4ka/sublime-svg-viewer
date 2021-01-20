@@ -15,7 +15,7 @@ SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures
 1. Make sure you already have [Package Control](https://packagecontrol.io/) installed
 2. Open command pallete by pressing <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>
 3. Choose "**Package Control: Install Package**" and then press <kbd>Enter</kbd>
-4. Select "**SVG-Viewer**" and press <kbd>Enter</kbd>
+4. Select "**SVG Viewer**" and press <kbd>Enter</kbd>
 
 ###### Converter
 

@@ -17,19 +17,20 @@
                         [
                             {
                                 "command": "edit_settings",
-                                "args": {"base_file": "${packages}/svg-viewer/svg-viewer.sublime-settings"},
+                                "args": {"base_file": "${packages}/SVG Viewer/svg-viewer.sublime-settings"},
                                 "caption": "Settings – Edit"
                             },
                             { "caption": "-" },
                             {
                                 "command": "edit_settings",
-                                "args": {"base_file": "${packages}/svg-viewer/Default.sublime-keymap"},
+                                "args": {"base_file": "${packages}/SVG Viewer/Default.sublime-keymap"},
+        
                                 "caption": "Key Bindings – Edit"
                             },
                             { "caption": "-" },
                             {
-                                "command": "open_file",
-                                "args": {"file": "${packages}/svg-viewer/converters.json"},
+                                "command": "edit_settings",
+                                "args": {"base_file": "${packages}/SVG Viewer/converters.json"},
                                 "caption": "Converters – Edit"
                             }
                         ]
@@ -38,5 +39,4 @@
             }
         ]
     }
-
 ]
