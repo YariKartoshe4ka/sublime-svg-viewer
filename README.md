@@ -22,10 +22,12 @@ SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures
 After installing plugin, you need install SVG to PNG converter<br>
 By default we support these converters:
 
-- [CairoSVG](https://github.com/Kozea/CairoSVG)
+- [CairoSVG](https://cairosvg.org/)
 - [Inkscape](https://inkscape.org/)
+- [ImageMagick](https://imagemagick.org/)
+- [SVGExport](https://github.com/shakiba/svgexport/) (DPI not supported)
 
-But you can [add](#contribution) another converter
+But you can [add](#adding-converter) another converter
 
 
 
@@ -43,17 +45,16 @@ If you want edit settings, key bindings or converters, do:<br>
 Preferences &#8594; Package Settings &#8594; Settings / Key Bindings / Converters - Edit
 
 
-### Contribution
+### Adding converter
 
-If you use another SVG to PNG converter, do:
+If you want to use another SVG to PNG converter, do:
 
-1. Fork this repository
-2. Generate command and name of your converter, such as this
+1. Generate command and name of your converter, such as this
 ```json
 {
     "converter": "converter --input-file \"{name}\" --output-file \"{out}\" --dpi {dpi}"
 }
 ```
-3. Add this string to the end of [converters.json](converters.json) file
-4. Add a link to your converter in the push-request description
-5. Send push-request
+2. Open converters.json file (Preferences &#8594; Package Settings &#8594; Converters - Edit) and add this string
+3. Reopen Sublime Text, open command pallete, choose "**SVG Viewer: Change Converter**" and choose your converter
+4. Profit!

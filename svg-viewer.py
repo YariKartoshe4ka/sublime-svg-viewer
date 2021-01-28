@@ -11,9 +11,6 @@ from json import loads
 def plugin_loaded():
     SvgViewerViewSvgCommand.settings = sublime.load_settings('svg-viewer.sublime-settings')
 
-def plugin_unloaded():
-    sublime.save_settings('svg-viewer.sublime-settings')
-
 
 # Funcions for work with converters
 def get_index_by_converter(converter):
@@ -42,7 +39,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
         converter = self.settings.get('converter', None)
         
         if converter:
-            if not which(converter):
+            if not which(self.converters[converter].split(' ')[0]):
                 sublime.error_message('"{}" converter not installed or not in PATH'.format(converter))
             elif converter not in self.converters.keys():
                 sublime.error_message('"{}" converter not supported. Please choose converter only from suggested list!'.format(converter))
@@ -64,7 +61,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
         name = self.view.window().active_view().file_name()
 
         dpi = self.settings.get('dpi', 96)
-        open_picture_in_preview_mode = self.settings.get('open_picture_in_preview_mode', False)
+        open_picture_in_preview_mode = self.settings.get('open_picture_in_preview_mode', True)
         always_view_svg_as_picture = self.settings.get('always_view_svg_as_picture', False)
 
         out = md5(open(name).read().encode('utf-8')).hexdigest() + '.png'
@@ -85,6 +82,7 @@ class SvgViewerChangeConverterCommand(sublime_plugin.TextCommand):
 
     def change(self, index):
         SvgViewerViewSvgCommand.settings.set('converter', get_converter_by_index(index))
+        sublime.save_settings('svg-viewer.sublime-settings')
 
 
 
