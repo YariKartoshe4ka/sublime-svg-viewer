@@ -28,7 +28,7 @@ def get_converters():
 class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
     BASE_DIR = os.path.dirname(__file__)
     TMP_DIR = os.path.join(gettempdir(), 'svg-viewer')
-    converters = loads(sublime.load_resource('Packages/SVG Viewer/converters.json'))
+    converters = loads(open(os.path.join(BASE_DIR, 'converters.json')).read())
 
     try:
         converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
@@ -53,7 +53,9 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
         if index < 0:
             return
 
-        self.settings.set('converter', get_converter_by_index(index))
+        if not self.settings.has('converter'):
+            self.settings.set('converter', get_converter_by_index(index))
+            sublime.save_settings('svg-viewer.sublime-settings')
 
         if not os.path.exists(self.TMP_DIR):
             os.mkdir(self.TMP_DIR)
