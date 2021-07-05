@@ -26,8 +26,8 @@
 
     // Online mode settings of converter
     "online": {
-        // API key from cloudconvert.com
-        "key": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGU3NDU1ZTYxOTdkNWUyMWQ2ZThiZGI3ZTFmMmU5ODY0OWU3OTAzNTg3NWFhZDMzNDJkZGU0OGFiNDRiOGM2YjE4MjM5YWRlNGY0NmRhMGMiLCJpYXQiOjE2MjU0NzcxNzQuNjYyMDcsIm5iZiI6MTYyNTQ3NzE3NC42NjIwNzMsImV4cCI6NDc4MTE1MDc3NC42MTg3NTYsInN1YiI6IjUyMTQ1ODY0Iiwic2NvcGVzIjpbInRhc2sucmVhZCIsInRhc2sud3JpdGUiXX0.e2ml5Wxj00RRX9IXcyRuo8UHh2P4E7ACpLq7teO9DDQaNPWVoTGrgmzi0bGbONNYqZqgVsgDCJV0BTomUYuALiMdtdpF0TsIKAN3aem5P4eIyMMDjdV90C5WJDrj6P-5rHEatiAWrwA_fhT0c3InPTRfhK9-jrmtUtk13mpoihdpRmBSHu9NBmNCT4cnfLsVQLlDeqOhPbvgXEnQQcEv_KGWQcufeQ3vJtOxUDk4TbT2QxjpViK5wn4ybc0B2oOIjt2YLla8nbP4JSMOUHVyF-2X5_33IzKNLNBujbQ-OkNM1DEDP3v5PXePTWjksjH77N6N9J53Uwkhb4QddWpy0bfHrYuWNRC0Rg7NY2unkQFAwS2kWQCh3Z73a1IfZrhtrA0ZW7Op-8DqHdug8wJuCY8L7kSIOFkbqwESOUvBYLuumE58hSlRZ978pufxA5daFYO46SJhVw2GvuhuIkujgbyAzEtZeRolESicq7_-LY1v7j6p2V7t-cdkSq2Q7Y6rmpzLYBFjDHn8x8B8nXho5gJn-F30QqSpIptSp9u9AjGJVXBhXGmi5VkqfhCXF-BMpavDY5kohK59i3FvAX6UqxZKIhFLvPf5Es6JYDpAtsXa2OwFc_vvCWpdBjuXOpTJF6tiyI1m5NuKzbCN2jeY5biC43mJngeamj4sgFILX18",
+        // List of API keys from cloudconvert.com
+        "keys_list": "file://C:\\Users\\FEDOR\\AppData\\Roaming\\Sublime Text\\Packages\\SVG Viewer\\keys.txt",
 
         // Convert engine, can be: imagemagick, inkscape,
         // chrome, graphicsmagick or rsvg

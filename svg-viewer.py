@@ -3,7 +3,6 @@ import sublime_plugin
 
 from .converter import Svg2PngConverter
 
-
 def plugin_loaded():
     global settings, converter
     settings = sublime.load_settings('svg-viewer.sublime-settings')

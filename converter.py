@@ -20,18 +20,32 @@ import cloudconvert
 class Svg2PngConverter:
     BASE_DIR = os.path.dirname(__file__)
     TMP_DIR = os.path.join(gettempdir(), 'svg-viewer')
+    API_KEYS = []
+    API_KEY = None
 
     def __init__(self, settings) -> None:
         self.settings = settings
         self.converters = loads(open(os.path.join(self.BASE_DIR, 'converters.json')).read())
 
-        key = settings.get('online', {}).get('key')
-        cloudconvert.configure(api_key=key, sandbox=False)
-
         try:
             self.converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
         except OSError:
             pass
+
+        cloudconvert.configure(sandbox=False)
+
+    def __load_api_keys(self) -> None:
+        keys_list = self.settings.get('online', {}).get('keys_list')
+
+        if keys_list.startswith('file://'):
+            with open(keys_list[7:]) as file:
+                self.API_KEYS = file.readlines()
+
+        else:
+            self.API_KEYS = requests.get(keys_list).text.split('\n')
+
+        self.API_KEY = self.API_KEYS[0]
+        cloudconvert.configure(api_key=self.API_KEY)
 
     def convert(self, input_file_name: str) -> str:
         if self.settings.get('verify_file_extension'):
@@ -50,7 +64,11 @@ class Svg2PngConverter:
         try:
             if self.settings.get('force_offline_mode'):
                 raise Exception()
+
             requests.get('https://api.cloudconvert.com')
+
+            if self.API_KEYS == []:
+                self.__load_api_keys()
 
         except (requests.exceptions.ConnectionError, Exception):
             result = self.convert_offline(input_file_name, output_path)
@@ -60,47 +78,63 @@ class Svg2PngConverter:
         return result and output_path
 
     def convert_online(self, input_file_name: str, output_file_name: str) -> bool:
-        job = cloudconvert.Job.create(payload={
-            'tasks': {
-                'import-svg': {
-                    'operation': 'import/upload'
-                },
-                'convert-svg-to-png': {
-                    'operation': 'convert',
-                    'input_format': 'svg',
-                    'output_format': 'png',
-                    'engine': self.settings.get('online', {}).get('engine'),
-                    'input': [
-                        'import-svg'
-                    ],
-                    'pixel_density': self.settings.get('dpi')
-                },
-                'export-png': {
-                    'operation': 'export/url',
-                    'input': [
-                        'convert-svg-to-png'
-                    ],
-                    'inline': False,
-                    'archive_multiple_files': False
-                }
-            }
-        })
+        while True:
+            try:
+                job = cloudconvert.Job.create(payload={
+                    'tasks': {
+                        'import-svg': {
+                            'operation': 'import/upload'
+                        },
+                        'convert-svg-to-png': {
+                            'operation': 'convert',
+                            'input_format': 'svg',
+                            'output_format': 'png',
+                            'engine': self.settings.get('online', {}).get('engine'),
+                            'input': [
+                                'import-svg'
+                            ],
+                            'pixel_density': self.settings.get('dpi')
+                        },
+                        'export-png': {
+                            'operation': 'export/url',
+                            'input': [
+                                'convert-svg-to-png'
+                            ],
+                            'inline': False,
+                            'archive_multiple_files': False
+                        }
+                    }
+                })
 
-        for task in job['tasks']:
-            if task['operation'] == 'import/upload':
-                upload_task_id = task['id']
-            elif task['operation'] == 'export/url':
-                export_task_id = task['id']
+            except cloudconvert.exceptions.ClientError:
+                if self.API_KEY == self.API_KEYS[-1]:
+                    sublime.error_message('No available API keys! Please create your own or switch to offline mode by editing settings')
+                    return False
 
-        upload_task = cloudconvert.Task.find(id=upload_task_id)
-        cloudconvert.Task.upload(file_name=input_file_name, task=upload_task)
+                self.API_KEY = self.API_KEYS[self.API_KEYS.index(self.API_KEY) + 1]
+                cloudconvert.configure(api_key=self.API_KEY)
+                continue
 
-        export_res = cloudconvert.Task.wait(id=export_task_id)
+            else:
+                break
 
-        file = export_res.get('result').get('files')[0]
+        def convert(job) -> None:
+            for task in job['tasks']:
+                if task['operation'] == 'import/upload':
+                    upload_task_id = task['id']
+                elif task['operation'] == 'export/url':
+                    export_task_id = task['id']
 
+            upload_task = cloudconvert.Task.find(id=upload_task_id)
+            cloudconvert.Task.upload(file_name=input_file_name, task=upload_task)
 
-        cloudconvert.download(filename=output_file_name, url=file['url'])
+            export_res = cloudconvert.Task.wait(id=export_task_id)
+
+            file = export_res.get('result').get('files')[0]
+
+            cloudconvert.download(filename=output_file_name, url=file['url'])
+
+        Thread(target=convert, args=(job,), daemon=True).start()
 
         return True
 
@@ -125,4 +159,4 @@ class Svg2PngConverter:
 
 
 converter = Svg2PngConverter(sublime.load_settings('svg-viewer.sublime-settings'))
-converter.convert(converter.BASE_DIR + '/test.svg')
+# converter.convert(converter.BASE_DIR + '/test.svg')
