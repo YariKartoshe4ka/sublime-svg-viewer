@@ -4,8 +4,7 @@
 
 ### About
 
-SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures
-
+SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures. It is an improved project of the original [SVG Preview](https://github.com/chunqiuyiyu/sublime-svg-preview)
 
 
 ### Installing

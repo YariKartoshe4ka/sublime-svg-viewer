@@ -8,16 +8,16 @@
     // won't be XML text, but picture
     "always_view_svg_as_picture": false,
 
-    // Enable force offline mode, to convert
-    // images via installed converters
-    "force_offline_mode": true,
+    // Enable force offline mode, to convert images via installed
+    // converters even if there is a stable internet connection
+    "force_offline_mode": false,
 
     // Verify extension with extensions list. If
     // no extension in the list, an error will be
     // displayed. Set false to disable verifying
     "verify_file_extension": true,
 
-    // All SVG files extensions
+    // All file extensions to be defined as an SVG file
     "extensions": [".svg"],
 
     // Dots per inch of generated PNG file
@@ -26,17 +26,20 @@
 
     // Online mode settings of converter
     "online": {
-        // List of API keys from cloudconvert.com
+        // List of API keys from cloudconvert.com. Use
+        // `file://<full path to file>` shema to open file
+        // with keys on your device or `https://<url to file>`
+        // shema to remote file with keys
         "keys_list": "file://C:\\Users\\FEDOR\\AppData\\Roaming\\Sublime Text\\Packages\\SVG Viewer\\keys.txt",
 
-        // Convert engine, can be: imagemagick, inkscape,
-        // chrome, graphicsmagick or rsvg
+        // Convert engine, can be: `imagemagick`, `inkscape`,
+        // `chrome`, `graphicsmagick` or `rsvg`
         "engine": "inkscape",
     },
 
     // Offline mode settings of converter
     "offline": {
-        // Convert engine, can be one from converters.json
+        // Convert engine, can be one from `converters.json`
         "engine": "inkscape",
     }
 }

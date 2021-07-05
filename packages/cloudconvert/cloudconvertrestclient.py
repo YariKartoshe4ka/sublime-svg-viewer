@@ -67,20 +67,7 @@ class CloudConvertRestClient(object):
         http_headers = util.merge_dict(
             self.headers(), headers or {})
 
-        try:
-            return self.http_call(url, method, json=body, headers=http_headers)
-
-        # Format Error message for bad request
-        except exceptions.BadRequest as error:
-            return {"error": json.loads(error.content)}
-
-        # Handle Expired token
-        except exceptions.UnauthorizedAccess as error:
-            if self.token_hash:
-                self.token_hash = None
-                return self.request(url, method, body, headers)
-            else:
-                raise error
+        return self.http_call(url, method, json=body, headers=http_headers)
 
     def http_call(self, url, method, **kwargs):
         """Makes a http call. Logs response information.
@@ -122,7 +109,7 @@ class CloudConvertRestClient(object):
         elif status == 400:
             raise exceptions.BadRequest(response, content)
         elif status == 401:
-            return json.loads(content) if content else {}
+            raise exceptions.UnauthorizedAccess(response, content)
         elif status == 403:
             raise exceptions.ForbiddenAccess(response, content)
         elif status == 404:

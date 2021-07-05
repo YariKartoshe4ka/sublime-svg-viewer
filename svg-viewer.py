@@ -1,12 +1,25 @@
+import os
+from json import loads
+
 import sublime
 import sublime_plugin
 
 from .converter import Svg2PngConverter
 
+
 def plugin_loaded():
-    global settings, converter
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    global settings, converters, converter
     settings = sublime.load_settings('svg-viewer.sublime-settings')
-    converter = Svg2PngConverter(settings)
+    converters = loads(open(os.path.join(BASE_DIR, 'converters.json')).read())
+
+    try:
+        converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
+    except OSError:
+        pass
+
+    converter = Svg2PngConverter(settings, converters)
 
 
 class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
@@ -21,3 +34,30 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
         if output_file_name:
             flags = sublime.TRANSIENT if open_picture_in_preview_mode and not always_view_svg_as_picture else 0
             self.view.window().open_file(output_file_name, flags=flags)
+
+
+class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.engines = list(converters.keys())
+        self.view.window().show_quick_panel(self.engines, self.on_done)
+
+    def on_done(self, index: int):
+        if index < 0:
+            return
+
+        offline = settings.get('offline')
+        offline['engine'] = self.engines[index]
+        settings.set('offline', offline)
+        sublime.save_settings('svg-viewer.sublime-settings')
+
+
+class SvgViewerChangeOnlineConverterCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        self.engines = ['imagemagick', 'inkscape', 'chrome', 'graphicsmagick', 'rsvg']
+        self.view.window().show_quick_panel(self.engines, self.on_done)
+
+    def on_done(self, index: int):
+        online = settings.get('online')
+        online['engine'] = self.engines[index]
+        settings.set('online', online)
+        sublime.save_settings('svg-viewer.sublime-settings')

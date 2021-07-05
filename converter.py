@@ -1,7 +1,6 @@
 import os
 import sys
 from hashlib import md5
-from json import loads
 from tempfile import gettempdir
 from threading import Thread
 from shutil import which
@@ -18,20 +17,13 @@ import cloudconvert
 
 
 class Svg2PngConverter:
-    BASE_DIR = os.path.dirname(__file__)
     TMP_DIR = os.path.join(gettempdir(), 'svg-viewer')
     API_KEYS = []
     API_KEY = None
 
-    def __init__(self, settings) -> None:
+    def __init__(self, settings, converters) -> None:
         self.settings = settings
-        self.converters = loads(open(os.path.join(self.BASE_DIR, 'converters.json')).read())
-
-        try:
-            self.converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
-        except OSError:
-            pass
-
+        self.converters = converters
         cloudconvert.configure(sandbox=False)
 
     def __load_api_keys(self) -> None:
@@ -78,6 +70,13 @@ class Svg2PngConverter:
         return result and output_path
 
     def convert_online(self, input_file_name: str, output_file_name: str) -> bool:
+        engine = self.settings.get('online', {}).get('engine')
+        dpi = self.settings.get('dpi')
+
+        if engine not in ['imagemagick', 'inkscape', 'chrome', 'graphicsmagick', 'rsvg']:
+            sublime.error_message('"{}" converter not supported. Please choose converter only from suggested list!'.format(engine))
+            return False
+
         while True:
             try:
                 job = cloudconvert.Job.create(payload={
@@ -89,11 +88,11 @@ class Svg2PngConverter:
                             'operation': 'convert',
                             'input_format': 'svg',
                             'output_format': 'png',
-                            'engine': self.settings.get('online', {}).get('engine'),
+                            'engine': engine,
                             'input': [
                                 'import-svg'
                             ],
-                            'pixel_density': self.settings.get('dpi')
+                            'pixel_density': dpi
                         },
                         'export-png': {
                             'operation': 'export/url',
@@ -156,7 +155,3 @@ class Svg2PngConverter:
         os.popen(cmd)
 
         return True
-
-
-converter = Svg2PngConverter(sublime.load_settings('svg-viewer.sublime-settings'))
-# converter.convert(converter.BASE_DIR + '/test.svg')
