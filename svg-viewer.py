@@ -33,7 +33,8 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
 
         if output_file_name:
             flags = sublime.TRANSIENT if open_picture_in_preview_mode and not always_view_svg_as_picture else 0
-            self.view.window().open_file(output_file_name, flags=flags)
+            view = self.view.window().open_file(output_file_name, flags=flags)
+            view.set_name(os.path.basename(name))
 
 
 class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
@@ -61,3 +62,13 @@ class SvgViewerChangeOnlineConverterCommand(sublime_plugin.TextCommand):
         online['engine'] = self.engines[index]
         settings.set('online', online)
         sublime.save_settings('svg-viewer.sublime-settings')
+
+
+class SvgViewerAlwaysViewSvgAsPictureEventListener(sublime_plugin.ViewEventListener):
+    def on_load(self):
+        if settings.get('always_view_svg_as_picture'):
+            for extension in settings.get('extensions'):
+                if self.view.file_name().endswith(extension):
+                    self.view.window().run_command('svg_viewer_view_svg')
+                    self.view.close()
+                    return

@@ -1,7 +1,7 @@
 {
     // If true, generated image will be opened in preview mode
     // Else it will be opened in new tab
-    // Ignored if always_view_svg_as_picture is true
+    // Ignored if `always_view_svg_as_picture` is true
     "open_picture_in_preview_mode": true,
 
     // If true, when you open SVG, it
@@ -10,7 +10,7 @@
 
     // Enable force offline mode, to convert images via installed
     // converters even if there is a stable internet connection
-    "force_offline_mode": false,
+    "force_offline_mode": true,
 
     // Verify extension with extensions list. If
     // no extension in the list, an error will be
