@@ -2,6 +2,7 @@ from cloudconvert.cloudconvertrestclient import *
 from cloudconvert.task import Task
 from cloudconvert.job import Job
 from cloudconvert.webhook import Webhook
+from cloudconvert.user import User
 
 def configure(**config):
     """

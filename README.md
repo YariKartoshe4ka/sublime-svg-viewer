@@ -1,13 +1,12 @@
-# SVG Viewer
+## SVG Viewer
+
+#### About
+
+SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures.<br>
+It is an improved version of the original [SVG Preview](https://github.com/chunqiuyiyu/sublime-svg-preview)
 
 
-
-### About
-
-SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures. It is an improved project of the original [SVG Preview](https://github.com/chunqiuyiyu/sublime-svg-preview)
-
-
-### Installing
+#### Installation
 
 ###### Plugin
 
@@ -18,7 +17,8 @@ SVG Viewer is Sublime Text 3 plugin for viewing SVG files as pictures. It is an 
 
 ###### Converter
 
-After installing plugin, you need install SVG to PNG converter<br>
+After installing plugin, you can use it only in online mode.<br>
+If you want use plugin in offline mode you should install SVG to PNG converter<br>
 By default we support these converters:
 
 - [CairoSVG](https://cairosvg.org/)
@@ -29,8 +29,7 @@ By default we support these converters:
 But you can [add](#adding-converter) another converter
 
 
-
-### Using
+#### Using
 
 1. Open SVG file
 2. Open command pallete and select "**SVG Viewer: View SVG**"
@@ -38,13 +37,13 @@ But you can [add](#adding-converter) another converter
 4. Profit!
 
 
-### Settings
+#### Settings
 
 If you want edit settings, key bindings or converters, do:<br>
 Preferences &#8594; Package Settings &#8594; Settings / Key Bindings / Converters - Edit
 
 
-### Adding converter
+#### Adding converter
 
 If you want to use another SVG to PNG converter, do:
 
