@@ -7,7 +7,10 @@
    Sublime Text 3 plugin, for viewing SVG files as pictures
 
 
-Thanks for installing SVG Viewer. Now you should install SVG to PNG converter.
+Thanks for installing SVG Viewer. Now you can only use the online mode.
+We recommend using offline mode, so install one of the supported converters
+and change `force_offline_mode` to `true` in the settings.
+
 By default we support these converters:
 
         CairoSVG (https://cairosvg.org)

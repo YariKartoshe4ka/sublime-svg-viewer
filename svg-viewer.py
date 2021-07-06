@@ -104,7 +104,7 @@ class SvgViewerChangeOnlineConverterCommand(sublime_plugin.TextCommand):
 class SvgViewerAlwaysViewSvgAsPictureEventListener(sublime_plugin.ViewEventListener):
     """ Always opens SVG files as binary (PNG) pictures """
 
-    def on_activated(self):
+    def on_load(self):
         # If this mode is activated
         if settings.get('always_view_svg_as_picture'):
 

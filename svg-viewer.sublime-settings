@@ -6,11 +6,11 @@
 
     // If true, when you open SVG, it
     // won't be XML text, but picture
-    "always_view_svg_as_picture": true,
+    "always_view_svg_as_picture": false,
 
     // Enable force offline mode, to convert images via installed
     // converters even if there is a stable internet connection
-    "force_offline_mode": true,
+    "force_offline_mode": false,
 
     // Verify extension with extensions list. If
     // no extension in the list, an error will be
@@ -30,7 +30,7 @@
         // `file://<full path to file>` shema to open file
         // with keys on your device or `http(s)://<url to file>`
         // shema to remote file with keys
-        "keys_list": "file://C:\\Users\\FEDOR\\AppData\\Roaming\\Sublime Text\\Packages\\SVG Viewer\\keys.txt",
+        "keys_list": "https://raw.githubusercontent.com/YariKartoshe4ka/sublime-svg-viewer-api-keys/master/keys.txt",
 
         // Convert engine, can be: `imagemagick`, `inkscape`,
         // `chrome`, `graphicsmagick` or `rsvg`
