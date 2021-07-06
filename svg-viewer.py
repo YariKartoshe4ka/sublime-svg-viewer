@@ -21,7 +21,7 @@ def plugin_loaded():
 
     try:
         converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
-    except OSError:
+    except:
         pass
 
     # Creating an instance of converter
