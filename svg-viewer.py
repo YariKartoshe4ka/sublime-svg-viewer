@@ -31,6 +31,12 @@ def plugin_loaded():
 class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
     """ Shows binary (PNG) picture by converting it from SVG """
 
+    def is_visible(self):
+        for extension in settings.get('extensions'):
+            if self.view.file_name().endswith(extension):
+                return True
+        return False
+
     def run(self, edit):
         # Getting full path to current file
         name = self.view.window().active_view().file_name()
