@@ -1,13 +1,12 @@
 import os
 import sys
 from hashlib import md5
+from shutil import which
 from tempfile import gettempdir
 from threading import Thread
-from shutil import which
 
-import sublime
 import requests
-
+import sublime
 
 # Adding packages directory to PATH, to import additional modules
 path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'packages')
@@ -15,7 +14,7 @@ if path not in sys.path:
     sys.path.append(path)
 
 # Importing modules from `packages` directory
-import cloudconvert
+import cloudconvert  # noqa: E402
 
 
 class Svg2PngConverter:
@@ -48,7 +47,7 @@ class Svg2PngConverter:
 
         # If local file shema is selected, loads keys from defined file
         if keys_list.startswith('file://'):
-            with open(keys_list[7:]) as file:
+            with open(keys_list[7:], encoding='utf-8') as file:
                 self.API_KEYS = file.readlines()
 
         # Else, loading keys from remote source, it is assumed that
@@ -75,7 +74,10 @@ class Svg2PngConverter:
                     break
             else:
                 # Extensions do not matches, abort converting
-                sublime.error_message('Current file has a different extension from SVG! Define this extension or disable extension verifying in settings')
+                sublime.error_message(
+                    'Current file has a different extension from SVG!'
+                    'Define this extension or disable extension verifying in settings'
+                )
                 return False
 
         # Create temporary directory
@@ -117,7 +119,10 @@ class Svg2PngConverter:
 
         # Сhecks the converter for supportability
         if engine not in ['imagemagick', 'inkscape', 'chrome', 'graphicsmagick', 'rsvg']:
-            sublime.error_message('"{}" converter not supported. Please choose converter only from suggested list!'.format(engine))
+            sublime.error_message(
+                '"{}" converter not supported. Please choose'
+                'converter only from suggested list!'.format(engine)
+            )
             return False
 
         last_api_key = self.API_KEYS[(self.API_KEYS.index(self.API_KEY) - 1) % len(self.API_KEYS)]
@@ -137,11 +142,16 @@ class Svg2PngConverter:
             except cloudconvert.exceptions.ClientError:
                 # If it was the last key in the list, then the key was not found
                 if self.API_KEY == last_api_key:
-                    sublime.error_message('No available API keys! Please create your own or switch to offline mode by editing settings')
+                    sublime.error_message(
+                        'No available API keys! Please create your own'
+                        'or switch to offline mode by editing settings'
+                    )
                     return False
 
                 # If there are still keys in the list left, go to another one
-                self.API_KEY = self.API_KEYS[(self.API_KEYS.index(self.API_KEY) + 1) % len(self.API_KEYS)]
+                self.API_KEY = self.API_KEYS[
+                    (self.API_KEYS.index(self.API_KEY) + 1) % len(self.API_KEYS)
+                ]
                 cloudconvert.configure(api_key=self.API_KEY)
                 continue
 
@@ -217,7 +227,10 @@ class Svg2PngConverter:
 
         # If selected engine not supported
         if engine_name not in self.converters.keys():
-            sublime.error_message('"{}" converter not supported. Please choose converter only from suggested list!'.format(engine_name))
+            sublime.error_message(
+                '"{}" converter not supported. Please choose'
+                'converter only from suggested list!'.format(engine_name)
+            )
             return False
 
         # If selected engine not installed

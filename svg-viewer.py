@@ -11,17 +11,19 @@ def plugin_loaded():
     """ Loads plugin and creates all necessary objects """
 
     # Getting directory where current script is stored
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.dirname(os.path.abspath(__file__))
 
     global settings, converters, converter
 
     # Loading configurations
     settings = sublime.load_settings('svg-viewer.sublime-settings')
-    converters = loads(open(os.path.join(BASE_DIR, 'converters.json')).read())
+
+    with open(os.path.join(base_dir, 'converters.json'), encoding='utf-8') as file:
+        converters = loads(file.read())
 
     try:
         converters.update(loads(sublime.load_resource('Packages/User/converters.json')))
-    except:
+    except Exception:
         pass
 
     # Creating an instance of converter
@@ -37,7 +39,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
                 return True
         return False
 
-    def run(self, edit):
+    def run(self, edit):  # noqa: U100
         # Getting full path to current file
         name = self.view.window().active_view().file_name()
 
@@ -50,7 +52,9 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
 
         # If picture was generated successfully, create view
         if output_file_name:
-            flags = sublime.TRANSIENT if open_picture_in_preview_mode and not always_view_svg_as_picture else 0
+            flags = sublime.TRANSIENT * (
+                open_picture_in_preview_mode and not always_view_svg_as_picture
+            )
             view = self.view.window().open_file(output_file_name, flags=flags)
             view.set_name(os.path.basename(name))
 
@@ -58,7 +62,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
 class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
     """ Changes offline converter to another one from supported converters """
 
-    def run(self, edit):
+    def run(self, edit):  # noqa: U100
         # Setting engines from loaded converters dictionary
         self.engines = list(converters.keys())
 
@@ -84,7 +88,7 @@ class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
 class SvgViewerChangeOnlineConverterCommand(sublime_plugin.TextCommand):
     """ Changes online converter to another one from supported converters """
 
-    def run(self, edit):
+    def run(self, edit):  # noqa: U100
         # Setting engines which are available on cloudconvert.com
         self.engines = ['imagemagick', 'inkscape', 'chrome', 'graphicsmagick', 'rsvg']
 

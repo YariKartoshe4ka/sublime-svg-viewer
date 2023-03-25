@@ -24,7 +24,7 @@
                             {
                                 "command": "edit_settings",
                                 "args": {"base_file": "${packages}/SVG Viewer/Default.sublime-keymap"},
-        
+
                                 "caption": "Key Bindings – Edit"
                             },
                             { "caption": "-" },
