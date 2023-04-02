@@ -84,8 +84,11 @@ class Svg2PngConverter:
         os.makedirs(self.TMP_DIR, exist_ok=True)
 
         # Generating path output file, by hashing path to the origin file with md5
-        output_file_name = md5(input_file_name.encode('utf-8')).hexdigest() + '.png'
-        output_path = os.path.join(self.TMP_DIR, output_file_name)
+        output_file_name = os.path.splitext(os.path.basename(input_file_name))[0] + '.png'
+        output_path = os.path.join(self.TMP_DIR, md5(input_file_name.encode('utf-8')).hexdigest())
+
+        os.makedirs(output_path, exist_ok=True)
+        output_path = os.path.join(output_path, output_file_name)
 
         # Checking network connection, if connection was not established, raises exception
         try:

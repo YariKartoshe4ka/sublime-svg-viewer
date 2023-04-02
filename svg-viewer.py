@@ -55,8 +55,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
             flags = sublime.TRANSIENT * (
                 open_picture_in_preview_mode and not always_view_svg_as_picture
             )
-            view = self.view.window().open_file(output_file_name, flags=flags)
-            view.set_name(os.path.basename(name))
+            self.view.window().open_file(output_file_name, flags=flags)
 
 
 class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
