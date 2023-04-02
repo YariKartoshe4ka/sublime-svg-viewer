@@ -11,7 +11,7 @@ import urllib
 
 import cloudconvert.utils as util
 from cloudconvert.exceptions import exceptions
-from cloudconvert.config import __version__, __endpoint_map__
+from cloudconvert.config import __version__, __endpoint_map__, __sync_endpoint_map__
 
 log = logging.getLogger(__name__)
 
@@ -40,6 +40,7 @@ class CloudConvertRestClient(object):
                                            "Required: live or sandbox")
 
         self.endpoint = kwargs.get("endpoint", self.default_endpoint())
+        self.sync_endpoint = kwargs.get("sync_endpoint", self.default_sync_endpoint())
         # Mandatory parameter, so not using `dict.get`
         self.proxies = kwargs.get("proxies", None)
         self.token_hash = None
@@ -57,6 +58,9 @@ class CloudConvertRestClient(object):
     def default_endpoint(self):
         return __endpoint_map__.get(self.mode)
 
+    def default_sync_endpoint(self):
+        return __sync_endpoint_map__.get(self.mode)
+
     def request(self, url, method, body=None, headers=None):
         """Make HTTP call, formats response and does error handling. Uses http_call method in CloudConvertRestClient class.
         Usage::
@@ -67,7 +71,20 @@ class CloudConvertRestClient(object):
         http_headers = util.merge_dict(
             self.headers(), headers or {})
 
-        return self.http_call(url, method, json=body, headers=http_headers)
+        try:
+            return self.http_call(url, method, json=body, headers=http_headers)
+
+        # Format Error message for bad request
+        except exceptions.BadRequest as error:
+            return {"error": json.loads(error.content)}
+
+        # Handle Expired token
+        except exceptions.UnauthorizedAccess as error:
+            if self.token_hash:
+                self.token_hash = None
+                return self.request(url, method, body, headers)
+            else:
+                raise error
 
     def http_call(self, url, method, **kwargs):
         """Makes a http call. Logs response information.
@@ -109,7 +126,7 @@ class CloudConvertRestClient(object):
         elif status == 400:
             raise exceptions.BadRequest(response, content)
         elif status == 401:
-            raise exceptions.UnauthorizedAccess(response, content)
+            return json.loads(content) if content else {}
         elif status == 403:
             raise exceptions.ForbiddenAccess(response, content)
         elif status == 404:
@@ -147,6 +164,15 @@ class CloudConvertRestClient(object):
             >>> cloudconvertrestclient.get("v2/jobs/JOB-ID")
         """
         return self.request(util.join_url(self.endpoint, action), 'GET', headers=headers or {})
+
+
+    def get_sync(self, action, headers=None):
+        """Make GET request to sync API
+        Usage::
+            >>> cloudconvertrestclient.get_sync("v2/tasks/TASK-ID")
+            >>> cloudconvertrestclient.get_sync("v2/jobs/JOB-ID")
+        """
+        return self.request(util.join_url(self.sync_endpoint, action), 'GET', headers=headers or {})
 
     def post(self, action, params=None, headers={}):
         """Make POST request
@@ -217,6 +243,11 @@ def default_client():
 
         __client__ = CloudConvertRestClient({}, sandbox=sandbox, api_key=API_KEY)
 
+    return __client__
+
+def get_existing_client():
+    """Gets an already created client if there is one, None otherwise."""
+    global __client__
     return __client__
 
 
