@@ -142,12 +142,11 @@ class SvgViewerAlwaysViewSvgAsPictureEventListener(sublime_plugin.ViewEventListe
 
             # Checking file extension with the specified in the settings
             name = self.view.file_name()
+            if name is None:
+                return
+
             for extension in settings.get('extensions'):
-                if name is None:
-                    return
-
                 if name.endswith(extension):
-
                     # Convert file and by the previously described command
                     window.run_command('svg_viewer_view_svg')
                     self.view.close()
