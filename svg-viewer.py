@@ -35,13 +35,24 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
 
     def is_visible(self):
         for extension in settings.get('extensions'):
-            if self.view.file_name().endswith(extension):
+            name = self.view.file_name()
+            if name is not None and name.endswith(extension):
                 return True
         return False
 
     def run(self, edit):  # noqa: U100
         # Getting full path to current file
-        name = self.view.window().active_view().file_name()
+        window = self.view.window()
+        if window is None:
+            return
+
+        view = window.active_view()
+        if view is None:
+            return
+
+        name = view.file_name()
+        if name is None:
+            return
 
         # Getting full path to generated PNG
         output_file_name = converter.convert(name)
@@ -55,7 +66,7 @@ class SvgViewerViewSvgCommand(sublime_plugin.TextCommand):
             flags = sublime.TRANSIENT * (
                 open_picture_in_preview_mode and not always_view_svg_as_picture
             )
-            self.view.window().open_file(output_file_name, flags=flags)
+            window.open_file(output_file_name, flags=flags)
 
 
 class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
@@ -65,8 +76,12 @@ class SvgViewerChangeOfflineConverterCommand(sublime_plugin.TextCommand):
         # Setting engines from loaded converters dictionary
         self.engines = list(converters.keys())
 
+        window = self.view.window()
+        if window is None:
+            return
+
         # Opening a panel with suggested engines
-        self.view.window().show_quick_panel(self.engines, self.on_done)
+        window.show_quick_panel(self.engines, self.on_done)
 
     def on_done(self, index: int):
         # If index less than 0, panel was closed without selecting
@@ -91,8 +106,12 @@ class SvgViewerChangeOnlineConverterCommand(sublime_plugin.TextCommand):
         # Setting engines which are available on cloudconvert.com
         self.engines = ['imagemagick', 'inkscape', 'chrome', 'graphicsmagick', 'rsvg']
 
+        window = self.view.window()
+        if window is None:
+            return
+
         # Opening a panel with suggested engines
-        self.view.window().show_quick_panel(self.engines, self.on_done)
+        window.show_quick_panel(self.engines, self.on_done)
 
     def on_done(self, index: int):
         # If index less than 0, panel was closed without selecting
@@ -114,15 +133,23 @@ class SvgViewerAlwaysViewSvgAsPictureEventListener(sublime_plugin.ViewEventListe
     """ Always opens SVG files as binary (PNG) pictures """
 
     def on_load(self):
+        window = self.view.window()
+        if window is None:
+            return
+
         # If this mode is activated
         if settings.get('always_view_svg_as_picture'):
 
             # Checking file extension with the specified in the settings
             for extension in settings.get('extensions'):
-                if self.view.file_name().endswith(extension):
+                name = self.view.file_name()
+                if name is None:
+                    continue
+
+                if name.endswith(extension):
 
                     # Convert file and by the previously described command
-                    self.view.window().run_command('svg_viewer_view_svg')
+                    window.run_command('svg_viewer_view_svg')
                     self.view.close()
 
                     return
